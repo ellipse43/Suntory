@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from django.conf.urls import url
+from django.conf.urls import url, include
+from rest_framework import routers
 
-from .views import ArticleList, ArticleDetail, UserList, UserDetail
+from .views import ArticleViewSet
 
+router = routers.DefaultRouter()
+router.register(r'articles', ArticleViewSet)
 
 urlpatterns = [
-    url(r'^b/$', ArticleList.as_view()),
-    url(r'^b/(?P<pk>[0-9]+)/$', ArticleDetail.as_view()),
-    url(r'^u/articles/$', UserList.as_view()),
-    url(r'^u/articles/(?P<pk>[0-9]+)/$', UserDetail.as_view()),
+    url(r'^', include(router.urls)),
 ]

@@ -14,14 +14,4 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ('pk', 'user', 'title', 'content', 'created')
-
-
-class UserSerializer(serializers.ModelSerializer):
-
-    articles = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=Article.objects.all())
-
-    class Meta:
-        model = User
-        fields = ('pk', 'username', 'articles')
+        fields = ('id', 'user', 'title', 'content', 'created')
