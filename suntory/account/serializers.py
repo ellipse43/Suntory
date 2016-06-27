@@ -3,14 +3,15 @@
 from __future__ import unicode_literals
 
 from django.core.validators import EmailValidator, MinLengthValidator
-from django.contrib.auth.models import User, Group
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from rest_framework import serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ['id', 'username', 'email', 'password']
         extra_kwargs = {
             'password': {
@@ -24,7 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        user = User.objects.create(**validated_data)
+        user = get_user_model().objects.create(**validated_data)
         user.set_password(validated_data['password'])
         user.save()
         return user

@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 
 class ArticleTag(models.Model):
@@ -18,7 +18,7 @@ class ArticleTag(models.Model):
 class Article(models.Model):
 
     user = models.ForeignKey(
-        User, related_name='articles',
+        settings.AUTH_USER_MODEL, related_name='articles',
         on_delete=models.SET_NULL, blank=True, null=True)
     tags = models.ManyToManyField(ArticleTag)
     title = models.CharField(max_length=128, blank=True, default='')

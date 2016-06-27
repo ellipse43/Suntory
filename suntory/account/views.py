@@ -3,7 +3,8 @@
 from __future__ import absolute_import, unicode_literals
 
 from django.shortcuts import render
-from django.contrib.auth.models import User, Group
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from rest_framework import viewsets, permissions, generics, mixins
 from rest_framework.views import APIView
 from oauth2_provider.ext.rest_framework import (
@@ -19,7 +20,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     permission_classes = [permissions.IsAuthenticated,
                           TokenHasReadWriteScope, IsCreationOrIsAuthenticated]
-    queryset = User.objects.all()
+    queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
 
     def get_permissions(self):
