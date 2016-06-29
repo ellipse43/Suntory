@@ -8,6 +8,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.utils.translation import ugettext_lazy as _
 from django.utils import six, timezone
+from django.conf import settings
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -34,7 +35,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         _('email address'),
         unique=True,
-        validators=[validators.EmailValidator(),],
+        validators=[validators.EmailValidator(), ],
         error_messages={
             'unique': _("A user with that email already exists."),
         },
@@ -84,3 +85,57 @@ class User(AbstractBaseUser, PermissionsMixin):
         Sends an email to this User.
         """
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+
+class Followee(models.Model):
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name='followees',
+        on_delete=models.SET_NULL, blank=True, null=True)
+    followee = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'followee', )
+
+    def __unicode__(self):
+        return '%s-%s' % (self.user, self.followee,)
+
+
+class Follower(models.Model):
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name='followers',
+        on_delete=models.SET_NULL, blank=True, null=True)
+    follower = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'follower', )
+
+    def __unicode__(self):
+        return '%s-%s' % (self.user, self.follower,)
+
+
+class Blocker(models.Model):
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name='blockers',
+        on_delete=models.SET_NULL, blank=True, null=True)
+    blocker = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'blocker', )
+
+    def __unicode__(self):
+        return '%s-%s' % (self.user, self.blocker,)
