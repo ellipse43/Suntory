@@ -138,3 +138,5 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'account.User'
+
+APPEND_SLASH = True
