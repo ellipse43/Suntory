@@ -18,7 +18,6 @@ user_list = UserViewSet.as_view({'post': 'create'})
 urlpatterns = [
     url(r'', include(router.urls)),
     url(r'users/(?P<user_id>[0-9]+)/articles/$', UserArticleList.as_view()),
-    # url(r'users/(?P<user_id>[0-9]+)/timeline/$', ),
     url(r'login/$',  TokenView.as_view()),
     url(r'logout/$', RevokeTokenView.as_view()),
     url(r'signup/$', user_list),

@@ -40,10 +40,10 @@ class Article(models.Model):
 
     @cached_property
     def likes_count(self):
-        return ArtcileStory.objects.filter(
+        return ArticleStory.objects.filter(
             article=self,
             user=self.user,
-            type_id=ArtcileStory.TYPE_LIKE,
+            type_id=ArticleStory.TYPE_LIKE,
         ).count()
 
     @cached_property
@@ -70,7 +70,7 @@ class ArticleComment(models.Model):
         return self.content
 
 
-class ArtcileStory(models.Model):
+class ArticleStory(models.Model):
     '''
     用故事来代表每朵花纹，师姐说的。。。
     '''
@@ -80,6 +80,14 @@ class ArtcileStory(models.Model):
     TYPE_THUMB_DOWN = 2
     TYPE_LIKE = 3
     TYPE_COLLECT = 4
+
+    TYPES = {
+        'null': TYPE_NULL,
+        'thumb_up': TYPE_THUMB_UP,
+        'thumb_down': TYPE_THUMB_DOWN,
+        'like': TYPE_LIKE,
+        'collect': TYPE_COLLECT,
+    }
 
     article = models.ForeignKey(
         Article,
