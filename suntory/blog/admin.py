@@ -2,10 +2,10 @@
 
 from django.contrib import admin
 
-from .models import Article, ArticleTag
+from .models import Article, Tag
 
 
-@admin.register(ArticleTag)
+@admin.register(Tag)
 class ArticleTagAdmin(admin.ModelAdmin):
 
     list_display = ('pk', 'code', 'name', 'is_enabled')

@@ -7,7 +7,7 @@ from django.conf import settings
 from django.utils.functional import cached_property
 
 
-class ArticleTag(models.Model):
+class Tag(models.Model):
 
     is_enabled = models.BooleanField(default=True)
     code = models.CharField(max_length=50, unique=True)
@@ -23,7 +23,7 @@ class Article(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name='articles',
         on_delete=models.SET_NULL, blank=True, null=True)
-    tags = models.ManyToManyField(ArticleTag)
+    tags = models.ManyToManyField(Tag)
     title = models.CharField(max_length=128, blank=True, default='')
     content = models.TextField()
     pv = models.IntegerField(default=0)
@@ -100,3 +100,41 @@ class ArticleStory(models.Model):
 
     def __unicode__(self):
         return self.article
+
+
+class Collection(models.Model):
+
+    '''
+    兴趣/主题
+    '''
+
+    banner = models.CharField(max_length=256, blank=True)
+    tags = models.ManyToManyField(Tag)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL, blank=True, null=True)
+    subject = models.CharField(max_length=512)
+    description = models.TextField(blank=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=True)
+    deleted = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.subject
+
+
+class CollectionSubscriber(models.Model):
+
+    '''
+    订阅
+    '''
+
+    collection = models.ForeignKey(
+        Collection, on_delete=models.SET_NULL, blank=True, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.SET_NULL, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-pk', )
