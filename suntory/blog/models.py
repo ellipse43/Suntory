@@ -71,6 +71,7 @@ class ArticleComment(models.Model):
 
 
 class ArticleStory(models.Model):
+
     '''
     用故事来代表每朵花纹，师姐说的。。。
     '''

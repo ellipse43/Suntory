@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 ]
 
 INSTALLED_APPS += [
+    'corsheaders',
     'oauth2_provider',
     'rest_framework',
     'account',
@@ -47,6 +48,7 @@ INSTALLED_APPS += [
 ]
 
 MIDDLEWARE_CLASSES = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -140,3 +142,5 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'account.User'
 
 APPEND_SLASH = True
+
+CORS_ORIGIN_ALLOW_ALL = True
