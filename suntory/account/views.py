@@ -2,6 +2,8 @@
 
 from __future__ import absolute_import, unicode_literals
 
+import json
+
 from django.shortcuts import render
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
@@ -9,6 +11,8 @@ from rest_framework import viewsets, permissions, generics, mixins
 from rest_framework.views import APIView
 from oauth2_provider.ext.rest_framework import (
     TokenHasReadWriteScope, TokenHasScope)
+from oauth2_provider.views import TokenView as BaseTokenView
+from oauth2_provider.models import AccessToken
 
 from .serializers import UserSerializer, GroupSerializer
 from .permissions import IsCreationOrIsAuthenticated
@@ -44,3 +48,25 @@ class UserArticleList(generics.ListAPIView):
     def get_queryset(self):
         user_id = self.kwargs['user_id']
         return Article.objects.filter(user_id=user_id)
+
+
+class TokenView(BaseTokenView):
+
+    def post(self, request, *args, **kwargs):
+        response = super(TokenView, self).post(request, *args, **kwargs)
+
+        # 自己APP才使用
+        body = json.loads(response.content)
+        token = AccessToken.objects.filter(
+            token=body.get('access_token')).last()
+        if token:
+            response.content = json.dumps(
+                dict(
+                    body,
+                    user={
+                        'id': token.user.id,
+                        'username': token.user.username,
+                    }
+                )
+            )
+        return response

@@ -4,9 +4,9 @@ from __future__ import unicode_literals, absolute_import
 
 from django.conf.urls import url, include
 from rest_framework.routers import DefaultRouter
-from oauth2_provider.views import TokenView, RevokeTokenView
+from oauth2_provider.views import RevokeTokenView
 
-from .views import UserViewSet, GroupViewSet, UserArticleList
+from .views import UserViewSet, GroupViewSet, UserArticleList, TokenView
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
