@@ -3,8 +3,11 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.db.models.signals import post_save
 from django.conf import settings
+from django.dispatch import receiver
 from django.utils.functional import cached_property
+from guardian.shortcuts import assign_perm
 
 
 class Tag(models.Model):
@@ -106,10 +109,10 @@ class ArticleStory(models.Model):
 class Collection(models.Model):
 
     '''
-    兴趣/主题
+    兴趣/主题...(Topic)
     '''
 
-    banner = models.CharField(max_length=256, blank=True)
+    banner = models.CharField(max_length=256, blank=True)  # 图片
     tags = models.ManyToManyField(Tag)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -139,3 +142,17 @@ class CollectionSubscriber(models.Model):
 
     class Meta:
         ordering = ('-pk', )
+        permission = (
+            ('admin', '管理员'),
+            ('writer', '协作者'),
+            ('audience', '围观群众'),
+        )
+
+
+# 触发信号操作（创建管理员）
+@receiver(post_save, sender=Collection)
+def create_admin_subscriber(sender, instance, **kwargs):
+    cs = CollectionSubscriber.objects.create(
+        collection=instance.id, user=instance.user)
+    assign_perm('admin', instance.user, cs)
+

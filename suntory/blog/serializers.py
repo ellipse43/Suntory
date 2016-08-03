@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import Article, ArticleComment, ArticleStory
+from .models import Article, ArticleComment, ArticleStory, Collection
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -29,3 +29,10 @@ class ArticleStorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ArticleStory
+
+
+class CollectionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Collection
+        fields = ('id', 'banner', 'subject', 'description', 'created')

@@ -53,3 +53,13 @@ class ArticleStoryViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         id = self.kwargs['id']
         return ArticleStory.objects.filter(article=id)
+
+
+class CollectionViewSet(viewsets.ModelViewSet):
+
+    serializer_class = CollectionSerializer
+    permissions_class = (permissions.IsAuthenticatedOrReadOnly, )
+    http_method_names = ['post', ]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
