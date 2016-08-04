@@ -5,7 +5,13 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import Article, ArticleComment, ArticleStory, Collection
+from .models import (
+    Article,
+    ArticleComment,
+    ArticleStory,
+    Collection,
+    CollectionSubscriber,
+)
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -38,3 +44,12 @@ class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collection
         fields = ('id', 'banner', 'subject', 'description', 'created')
+
+
+class CollectionSubscriberSerializer(serializers.ModelSerializer):
+
+    user = serializers.ReadOnlyField(source='user.username')
+    collection = serializers.ReadOnlyField(source='collection.subject')
+
+    class Meta:
+        model = CollectionSubscriber

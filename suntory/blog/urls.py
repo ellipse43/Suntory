@@ -9,6 +9,7 @@ from .views import (
     ArticleCommentViewSet,
     ArticleStoryViewSet,
     CollectionViewSet,
+    CollectionSubscriberViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -21,7 +22,15 @@ router.register(
     ArticleStoryViewSet, base_name='types'
 )
 router.register(r'collections', CollectionViewSet)
+router.register(r'collections/(?P<id>[0-9]+)/subscribe',
+                CollectionSubscriberViewSet, base_name='subscribers')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'collections/(?P<id>[0-9]+)/subscribe',
+        CollectionSubscriberViewSet.as_view({'post': 'create'}),
+        name='collection_subscribe'),
+    url(r'collections/(?P<id>[0-9]+)/unsubscribe',
+        CollectionSubscriberViewSet.as_view({'delete': 'destroy'}),
+        name='collection_unsubscribe'),
 ]
