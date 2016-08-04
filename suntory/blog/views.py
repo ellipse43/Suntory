@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from rest_framework import mixins, generics, permissions, viewsets
 from rest_framework.views import APIView
 
-from .models import Article, ArticleComment, ArticleStory
+from .models import Article, ArticleComment, ArticleStory, Collection
 from .serializers import (
     ArticleSerializer,
     ArticleCommentSerializer,
@@ -61,9 +61,10 @@ class ArticleStoryViewSet(viewsets.ModelViewSet):
 
 class CollectionViewSet(viewsets.ModelViewSet):
 
+    queryset = Collection.objects.all()
     serializer_class = CollectionSerializer
     permissions_class = (permissions.IsAuthenticatedOrReadOnly, )
-    http_method_names = ['post', ]
+    http_method_names = ['patch', 'post', ]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(author=self.request.user)

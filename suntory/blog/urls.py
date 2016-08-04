@@ -4,7 +4,12 @@ from django.conf.urls import url, include
 from rest_framework import routers
 
 from .models import ArticleStory
-from .views import ArticleViewSet, ArticleCommentViewSet, ArticleStoryViewSet
+from .views import (
+    ArticleViewSet,
+    ArticleCommentViewSet,
+    ArticleStoryViewSet,
+    CollectionViewSet,
+)
 
 router = routers.DefaultRouter()
 router.register(r'articles', ArticleViewSet)
@@ -15,6 +20,7 @@ router.register(
         '|'.join(ArticleStory.TYPES.keys())),
     ArticleStoryViewSet, base_name='types'
 )
+router.register(r'collections', CollectionViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),

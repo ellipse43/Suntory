@@ -149,10 +149,11 @@ class CollectionSubscriber(models.Model):
         )
 
 
-# 触发信号操作（创建管理员）
 @receiver(post_save, sender=Collection)
-def create_admin_subscriber(sender, instance, **kwargs):
-    cs = CollectionSubscriber.objects.create(
-        collection=instance.id, user=instance.user)
-    assign_perm('admin', instance.user, cs)
+def create_admin_subscriber(sender, instance, created, **kwargs):
+    # 新主题创建者分配管理员权限
+    if created is True:
+        cs = CollectionSubscriber.objects.create(
+            collection=instance, user=instance.author)
+        assign_perm('admin', instance.author, cs)
 

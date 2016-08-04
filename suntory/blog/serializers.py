@@ -33,6 +33,8 @@ class ArticleStorySerializer(serializers.ModelSerializer):
 
 class CollectionSerializer(serializers.ModelSerializer):
 
+    # author = serializers.ReadOnlyField(source='user.username')
+
     class Meta:
         model = Collection
         fields = ('id', 'banner', 'subject', 'description', 'created')
