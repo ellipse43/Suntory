@@ -127,6 +127,13 @@ class Collection(models.Model):
     def __unicode__(self):
         return self.subject
 
+    class Meta:
+        permissions = (
+            ('admin', '管理员'),
+            ('writer', '协作者'),
+            ('audience', '围观群众'),
+        )
+
 
 class CollectionSubscriber(models.Model):
 
@@ -142,18 +149,18 @@ class CollectionSubscriber(models.Model):
 
     class Meta:
         ordering = ('-pk', )
-        permissions = (
-            ('admin', '管理员'),
-            ('writer', '协作者'),
-            ('audience', '围观群众'),
-        )
+
+
+@receiver(post_save, sender=CollectionSubscriber)
+def create_subscriber(sender, instance, created, **kwargs):
+    if created is True:
+        assign_perm('audience', instance.user, instance.collection)
 
 
 @receiver(post_save, sender=Collection)
 def create_admin_subscriber(sender, instance, created, **kwargs):
     # 新主题创建者分配管理员权限
     if created is True:
-        cs = CollectionSubscriber.objects.create(
+        CollectionSubscriber.objects.create(
             collection=instance, user=instance.author)
-        assign_perm('admin', instance.author, cs)
-
+        assign_perm('admin', instance.author, instance)
