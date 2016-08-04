@@ -4,8 +4,16 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from rest_framework import mixins, generics, permissions, viewsets
 from rest_framework.views import APIView
+from rest_framework.exceptions import PermissionDenied
+from guardian.shortcuts import get_perms, get_user_perms
 
-from .models import Article, ArticleComment, ArticleStory, Collection
+from .models import (
+    Article,
+    ArticleComment,
+    ArticleStory,
+    Collection,
+    CollectionSubscriber,
+)
 from .serializers import (
     ArticleSerializer,
     ArticleCommentSerializer,
@@ -68,3 +76,15 @@ class CollectionViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    def perform_update(self, serializer):
+        # 检查权限
+        cs = get_object_or_404(
+            CollectionSubscriber,
+            user=self.request.user,
+            collection=self.get_object(),
+        )
+        if (self.request.user.has_perm('admin', cs) is False
+                and self.request.user.has_perm('writer', cs) is False):
+            raise PermissionDenied
+        serializer.save()
