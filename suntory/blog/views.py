@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.exceptions import PermissionDenied
 from guardian.shortcuts import get_perms, get_user_perms
 
+from .permissions import PatchByAdminOrWriterPerm
 from .models import (
     Article,
     ArticleComment,
@@ -35,7 +36,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 class ArticleCommentViewSet(viewsets.ModelViewSet):
 
     serializer_class = ArticleCommentSerializer
-    permissions_class = (permissions.IsAuthenticatedOrReadOnly, )
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
 
     def perform_create(self, serializer):
         id = self.kwargs['id']
@@ -50,7 +51,7 @@ class ArticleCommentViewSet(viewsets.ModelViewSet):
 class ArticleStoryViewSet(viewsets.ModelViewSet):
 
     serializer_class = ArticleStorySerializer
-    permissions_class = (permissions.IsAuthenticatedOrReadOnly, )
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
     http_method_names = ['post', ]
 
     def perform_create(self, serializer):
@@ -71,20 +72,11 @@ class CollectionViewSet(viewsets.ModelViewSet):
 
     queryset = Collection.objects.all()
     serializer_class = CollectionSerializer
-    permissions_class = (permissions.IsAuthenticatedOrReadOnly, )
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        PatchByAdminOrWriterPerm,
+    )
     http_method_names = ['patch', 'post', ]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
-
-    def perform_update(self, serializer):
-        # 检查权限
-        cs = get_object_or_404(
-            CollectionSubscriber,
-            user=self.request.user,
-            collection=self.get_object(),
-        )
-        if (self.request.user.has_perm('admin', cs) is False
-                and self.request.user.has_perm('writer', cs) is False):
-            raise PermissionDenied
-        serializer.save()
