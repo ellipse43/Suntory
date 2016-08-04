@@ -142,7 +142,7 @@ class CollectionSubscriber(models.Model):
 
     class Meta:
         ordering = ('-pk', )
-        permission = (
+        permissions = (
             ('admin', '管理员'),
             ('writer', '协作者'),
             ('audience', '围观群众'),

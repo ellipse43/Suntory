@@ -7,7 +7,11 @@ from rest_framework.views import APIView
 
 from .models import Article, ArticleComment, ArticleStory
 from .serializers import (
-    ArticleSerializer, ArticleCommentSerializer, ArticleStorySerializer)
+    ArticleSerializer,
+    ArticleCommentSerializer,
+    ArticleStorySerializer,
+    CollectionSerializer,
+)
 
 
 class ArticleViewSet(viewsets.ModelViewSet):
