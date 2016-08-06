@@ -9,6 +9,8 @@ from django.dispatch import receiver
 from django.utils.functional import cached_property
 from guardian.shortcuts import assign_perm
 
+from suntory.utils import get_users_with_perm
+
 
 class Tag(models.Model):
 
@@ -126,6 +128,14 @@ class Collection(models.Model):
 
     def __unicode__(self):
         return self.subject
+
+    @property
+    def admins(self):
+        return get_users_with_perm(self, 'admin')
+
+    @property
+    def writers(self):
+        return []
 
     class Meta:
         permissions = (

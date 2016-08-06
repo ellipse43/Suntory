@@ -77,7 +77,7 @@ class CollectionViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticatedOrReadOnly,
         PatchByAdminOrWriterPerm,
     )
-    http_method_names = ['patch', 'post', ]
+    http_method_names = ['get', 'patch', 'post', ]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

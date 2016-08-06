@@ -12,6 +12,7 @@ from .models import (
     Collection,
     CollectionSubscriber,
 )
+from account.serializers import UserSerializer
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -39,11 +40,13 @@ class ArticleStorySerializer(serializers.ModelSerializer):
 
 class CollectionSerializer(serializers.ModelSerializer):
 
-    # author = serializers.ReadOnlyField(source='user.username')
+    admins = UserSerializer(many=True)
+    writers = UserSerializer(many=True)
 
     class Meta:
         model = Collection
-        fields = ('id', 'banner', 'subject', 'description', 'created')
+        fields = ('id', 'banner', 'subject', 'description',
+                  'created', 'admins', 'writers')
 
 
 class CollectionSubscriberSerializer(serializers.ModelSerializer):

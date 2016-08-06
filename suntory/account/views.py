@@ -16,8 +16,8 @@ from oauth2_provider.models import AccessToken
 
 from .serializers import UserSerializer, GroupSerializer
 from .permissions import IsCreationOrIsAuthenticated
-from blog.serializers import ArticleSerializer
-from blog.models import Article
+from blog.serializers import ArticleSerializer, CollectionSerializer
+from blog.models import Article, Collection
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -48,6 +48,15 @@ class UserArticleList(generics.ListAPIView):
     def get_queryset(self):
         user_id = self.kwargs['user_id']
         return Article.objects.filter(user_id=user_id)
+
+
+class UserCollectionList(generics.ListAPIView):
+
+    serializer_class = CollectionSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        return Collection.objects.filter(author_id=user_id)
 
 
 class TokenView(BaseTokenView):
