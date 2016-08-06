@@ -145,6 +145,27 @@ class Collection(models.Model):
         )
 
 
+class CollectionArticle(models.Model):
+
+    '''
+    主题文章
+    '''
+
+    STATUS_NORMAL = 0
+    STATUS_AUDIT = 1  # 通过审核
+    STATUS_WAIT_AUDIT = 2  # 待审核
+
+    collection = models.ForeignKey(
+        Collection, on_delete=models.SET_NULL, blank=True, null=True)
+    article = models.ForeignKey(
+        Article, on_delete=models.SET_NULL, blank=True, null=True)
+    status = models.IntegerField(default=STATUS_NORMAL)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-pk', )
+
+
 class CollectionSubscriber(models.Model):
 
     '''

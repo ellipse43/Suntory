@@ -10,6 +10,7 @@ from .models import (
     ArticleComment,
     ArticleStory,
     Collection,
+    CollectionArticle,
     CollectionSubscriber,
 )
 from account.serializers import UserSerializer
@@ -17,12 +18,13 @@ from account.serializers import UserSerializer
 
 class ArticleSerializer(serializers.ModelSerializer):
 
-    user = serializers.ReadOnlyField(source='user.username')
+    user = UserSerializer()
 
     class Meta:
         model = Article
         fields = ('id', 'user', 'title', 'content', 'created', 'pv',
                   'likes_count', 'comments_count',)
+        read_only_fields = ('user', )
 
 
 class ArticleCommentSerializer(serializers.ModelSerializer):
@@ -47,6 +49,17 @@ class CollectionSerializer(serializers.ModelSerializer):
         model = Collection
         fields = ('id', 'banner', 'subject', 'description',
                   'created', 'admins', 'writers')
+
+
+class CollectionArticleSerializer(serializers.ModelSerializer):
+
+    collection = CollectionSerializer()
+    article = ArticleSerializer()
+
+    class Meta:
+        model = CollectionArticle
+        fields = ('id', 'collection', 'article')
+        read_only_fields = ('collection', 'article')
 
 
 class CollectionSubscriberSerializer(serializers.ModelSerializer):

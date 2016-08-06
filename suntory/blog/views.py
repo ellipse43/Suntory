@@ -13,6 +13,7 @@ from .models import (
     ArticleComment,
     ArticleStory,
     Collection,
+    CollectionArticle,
     CollectionSubscriber,
 )
 from .serializers import (
@@ -20,6 +21,7 @@ from .serializers import (
     ArticleCommentSerializer,
     ArticleStorySerializer,
     CollectionSerializer,
+    CollectionArticleSerializer,
     CollectionSubscriberSerializer,
 )
 
@@ -81,6 +83,17 @@ class CollectionViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+
+class CollectionArticleViewSet(viewsets.ModelViewSet):
+
+    serializer_class = CollectionArticleSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
+    http_method_names = ['get', 'post']
+
+    def get_queryset(self):
+        id = self.kwargs['id']
+        return CollectionArticle.objects.filter(collection=id)
 
 
 class CollectionSubscriberViewSet(viewsets.ModelViewSet):

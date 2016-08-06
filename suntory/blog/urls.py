@@ -9,6 +9,7 @@ from .views import (
     ArticleCommentViewSet,
     ArticleStoryViewSet,
     CollectionViewSet,
+    CollectionArticleViewSet,
     CollectionSubscriberViewSet,
 )
 
@@ -22,11 +23,16 @@ router.register(
     ArticleStoryViewSet, base_name='types'
 )
 router.register(r'collections', CollectionViewSet)
-router.register(r'collections/(?P<id>[0-9]+)/subscribe',
-                CollectionSubscriberViewSet, base_name='subscribers')
+# router.register(r'collections/(?P<id>[0-9]+)/subscribe',
+# CollectionSubscriberViewSet, base_name='subscribers')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'collections/(?P<id>[0-9]+)/articles',
+        CollectionArticleViewSet.as_view({
+            'get': 'list',
+            'post': 'create',
+        })),
     url(r'collections/(?P<id>[0-9]+)/subscribe',
         CollectionSubscriberViewSet.as_view({'post': 'create'}),
         name='collection_subscribe'),
