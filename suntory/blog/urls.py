@@ -5,6 +5,7 @@ from rest_framework import routers
 
 from .models import ArticleStory
 from .views import (
+    TagViewSet,
     ArticleViewSet,
     ArticleCommentViewSet,
     ArticleStoryViewSet,
@@ -23,8 +24,7 @@ router.register(
     ArticleStoryViewSet, base_name='types'
 )
 router.register(r'collections', CollectionViewSet)
-# router.register(r'collections/(?P<id>[0-9]+)/subscribe',
-# CollectionSubscriberViewSet, base_name='subscribers')
+router.register(r'tags', TagViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),

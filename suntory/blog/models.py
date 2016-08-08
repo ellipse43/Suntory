@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+from copy import deepcopy
+
 from django.db import models
 from django.db.models.signals import post_save
 from django.conf import settings
@@ -15,9 +17,18 @@ from suntory.utils import get_users_with_perm
 class Tag(models.Model):
 
     is_enabled = models.BooleanField(default=True)
-    code = models.CharField(max_length=50, unique=True)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-pk']
+
+    def save(self, *args, **kwargs):
+        obj = Tag.objects.filter(name=self.name).first()
+        if obj is not None and self.id is None:
+            self.id = obj.id
+            return self
+        return super(Tag, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name

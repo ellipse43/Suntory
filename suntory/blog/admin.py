@@ -8,7 +8,7 @@ from .models import Article, Tag
 @admin.register(Tag)
 class ArticleTagAdmin(admin.ModelAdmin):
 
-    list_display = ('pk', 'code', 'name', 'is_enabled')
+    list_display = ('pk', 'name', 'is_enabled')
 
 
 @admin.register(Article)

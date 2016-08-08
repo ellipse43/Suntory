@@ -9,6 +9,7 @@ from guardian.shortcuts import get_perms, get_user_perms
 
 from .permissions import PatchByAdminOrWriterPerm
 from .models import (
+    Tag,
     Article,
     ArticleComment,
     ArticleStory,
@@ -17,6 +18,7 @@ from .models import (
     CollectionSubscriber,
 )
 from .serializers import (
+    TagSerializer,
     ArticleSerializer,
     ArticleCommentSerializer,
     ArticleStorySerializer,
@@ -24,6 +26,13 @@ from .serializers import (
     CollectionArticleSerializer,
     CollectionSubscriberSerializer,
 )
+
+
+class TagViewSet(viewsets.ModelViewSet):
+
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
 
 
 class ArticleViewSet(viewsets.ModelViewSet):
