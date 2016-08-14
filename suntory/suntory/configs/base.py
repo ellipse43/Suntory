@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import logging
+
+import raven
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -40,6 +43,7 @@ INSTALLED_APPS = [
 ]
 
 INSTALLED_APPS += [
+    'raven.contrib.django.raven_compat',
     'corsheaders',
     'oauth2_provider',
     'guardian',
@@ -152,3 +156,9 @@ AUTH_USER_MODEL = 'account.User'
 APPEND_SLASH = True
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+RAVEN_CONFIG = {
+    'dsn': 'http://9d1603ad6fdb40499bdcae04b8e0833a:7f9a57c290dd47d1afa38f4934b69362@ing:9000/2',
+    # 'release': raven.fetch_git_sha(os.path.dirname(__file__)),
+    'CELERY_LOGLEVEL': logging.ERROR,
+}
