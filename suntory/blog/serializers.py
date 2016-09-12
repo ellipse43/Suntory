@@ -79,8 +79,8 @@ class ArticleStorySerializer(serializers.ModelSerializer):
 
 class CollectionSerializer(serializers.ModelSerializer):
 
-    admins = UserSerializer(many=True)
-    writers = UserSerializer(many=True)
+    admins = UserSerializer(many=True, allow_null=True, read_only=True)
+    writers = UserSerializer(many=True, allow_null=True, read_only=True)
 
     class Meta:
         model = Collection
