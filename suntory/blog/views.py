@@ -3,6 +3,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from rest_framework import mixins, generics, permissions, viewsets
+from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import PermissionDenied, APIException
 from guardian.shortcuts import get_perms, get_user_perms
@@ -44,6 +45,13 @@ class ArticleViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        # 嗯，要移走
+        instance.pv += 1
+        instance.save()
+        return Response(serializer.data)
 
 class ArticleCommentViewSet(viewsets.ModelViewSet):
 
